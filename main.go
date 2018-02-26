@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"math/rand"
+	"time"
 )
 
 type Login struct {
@@ -10,11 +12,18 @@ type Login struct {
 }
 
 func main() {
-	fmt.Printf("Hello friend\n")
+	for i := 0; i < 10; i++ {
+		fmt.Printf("%v\n", generateLogin(8))
+	}
 }
 
 func generateLogin(nbreCara int) string {
 	const base string = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-	return base
+	b := make([]byte, nbreCara)
+	for i := range b {
+		rand.Seed(time.Now().UnixNano())
+		b[i] = base[rand.Intn(len(base))]
+	}
+	return string(b)
 
 }
