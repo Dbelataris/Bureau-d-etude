@@ -22,9 +22,12 @@ func (log *Login) generateLogin(nbreCara int) {
 	log.Password = string(b)
 }
 func main() {
-	for i := 0; i < 10; i++ {
+	var UsersValide = []Login{}
+	for i := 0; i < 5; i++ {
 		var login1 Login
 		login1.generateLogin(8)
-		fmt.Printf("%v", login1)
+		UsersValide = append(UsersValide, login1)
+		//fmt.Println("%v", login1)
 	}
+	fmt.Println(UsersValide)
 }
