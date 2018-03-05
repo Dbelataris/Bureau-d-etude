@@ -1,33 +1,41 @@
 package main
 
 import (
+	"bufio"
+	"database/sql"
 	"fmt"
-	"math/rand"
-	"time"
+	"os"
+	"strings"
+
+	. "Bureau-d-etude/tools"
+
+	_ "Bureau-d-etude/github.com/go-sql-driver/mysql"
 )
 
-type Login struct {
-	Username string
-	Password string
-}
-
-func (log *Login) generateLogin(nbreCara int) {
-	const base string = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-	b := make([]byte, nbreCara)
-	for i := range b {
-		rand.Seed(time.Now().UnixNano())
-		b[i] = base[rand.Intn(len(base))]
-	}
-	log.Username = string(b)
-	log.Password = string(b)
-}
 func main() {
-	var UsersValide = []Login{}
-	for i := 0; i < 5; i++ {
-		var login1 Login
-		login1.generateLogin(8)
-		UsersValide = append(UsersValide, login1)
-		//fmt.Println("%v", login1)
+	again := true
+	var LoginsValides = []Login{}
+	var loginGen Login
+	db, _ := sql.Open("mysql", "radius:radpass@tcp(127.0.0.1:3306)/radius")
+
+	if CheckDbCon(db) {
+		println("Connexion à la BD établit")
+	} else {
+		println("Connexion à la BD échouée")
 	}
-	fmt.Println(UsersValide)
+	for again {
+		reader := bufio.NewReader(os.Stdin)
+		fmt.Print("Générer un login? <o/n>")
+		str, _ := reader.ReadString('\n')
+		if strings.TrimSpace(str) == "o" {
+			again = true
+			loginGen.GenerateLogin(8, 5)
+			StoreLogin(db, loginGen)
+			LoginsValides = append(LoginsValides, loginGen)
+			fmt.Println(LoginsValides)
+		} else {
+			again = false
+		}
+	}
+
 }
