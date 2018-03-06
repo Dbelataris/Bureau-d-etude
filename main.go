@@ -1,11 +1,9 @@
 package main
 
 import (
-	"bufio"
 	"database/sql"
 	"fmt"
-	"os"
-	"strings"
+	"net/http"
 
 	. "Bureau-d-etude/tools"
 
@@ -13,9 +11,9 @@ import (
 )
 
 func main() {
-	again := true
+	/*again := true
 	var LoginsValides = []Login{}
-	var loginGen Login
+	var loginGen Login*/
 	db, _ := sql.Open("mysql", "radius:radpass@tcp(127.0.0.1:3306)/radius")
 
 	if CheckDbCon(db) {
@@ -23,7 +21,7 @@ func main() {
 	} else {
 		println("Connexion à la BD échouée")
 	}
-	for again {
+	/*for again {
 		reader := bufio.NewReader(os.Stdin)
 		fmt.Print("Générer un login? <o/n>")
 		str, _ := reader.ReadString('\n')
@@ -36,6 +34,18 @@ func main() {
 		} else {
 			again = false
 		}
-	}
+	}*/
+	http.HandleFunc("/getLogin", LoginHandleFunc)
+	http.ListenAndServe(":8080", nil)
 
+}
+
+func LoginHandleFunc(w http.ResponseWriter, r *http.Request) {
+	var loginGen Login
+	loginGen.GenerateLogin(8, 5)
+	//StoreLogin(db, loginGen)
+	fmt.Println(loginGen)
+	w.Header().Add("Content-Type", "application/json; charset=utf-8")
+	w.Write(loginGen.ToJSON())
+	fmt.Println("ok")
 }

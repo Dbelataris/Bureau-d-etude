@@ -1,6 +1,7 @@
 package tools
 
 import (
+	"encoding/json"
 	"math/rand"
 	"time"
 )
@@ -24,4 +25,12 @@ func (log *Login) GenerateLogin(nbreCara int, Expiration int) {
 	log.StartTime = time.Now().Format("2006-01-02 15:04:05")
 	log.ExpirationTime = Expiration
 
+}
+
+func (log *Login) ToJSON() []byte {
+	LoginJSON, err := json.Marshal(log)
+	if err != nil {
+		panic(err)
+	}
+	return LoginJSON
 }
