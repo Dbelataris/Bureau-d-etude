@@ -18,11 +18,11 @@ func CheckDbCon(db *sql.DB) bool {
 }
 
 func StoreLogin(db *sql.DB, user Login) {
-	stmt, err := db.Prepare("INSERT INTO radcheck (username, attribute, op, value, time_Gen,TempsExpiration) VALUES (?, 'Cleartext-Password', ':=', ?, ?, ?)")
+	stmt, err := db.Prepare("INSERT INTO radcheck (username, attribute, op, value, time_Gen,TempsExpiration, useTime) VALUES (?, 'Cleartext-Password', ':=', ?, ?, ?, ?)")
 	if err != nil {
 		log.Fatal(err)
 	}
-	res, err := stmt.Exec(user.Username, user.Password, user.StartTime, user.ExpirationTime)
+	res, err := stmt.Exec(user.Username, user.Password, user.StartTime, user.ExpirationTime, user.UseTime)
 	if err != nil {
 		log.Fatal(err)
 	}
