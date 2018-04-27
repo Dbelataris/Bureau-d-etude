@@ -4,48 +4,39 @@ import (
 	"database/sql"
 	"fmt"
 	"net/http"
+	"time"
 
 	. "Bureau-d-etude/tools"
 
 	_ "Bureau-d-etude/github.com/go-sql-driver/mysql"
 )
 
-func main() {
-	/*again := true
-	var LoginsValides = []Login{}
-	var loginGen Login*/
-	db, _ := sql.Open("mysql", "radius:radpass@tcp(127.0.0.1:3306)/radius")
+var Db *sql.DB
 
-	if CheckDbCon(db) {
+func main() {
+	/*var LoginsValides = []Login{}
+	  var loginGen Login*/
+	Db, _ = sql.Open("mysql", "radius:radpass@tcp(127.0.0.1:3306)/radius")
+	if CheckDbCon(Db) {
 		println("Connexion à la BD établit")
 	} else {
 		println("Connexion à la BD échouée")
 	}
-	/*for again {
-		reader := bufio.NewReader(os.Stdin)
-		fmt.Print("Générer un login? <o/n>")
-		str, _ := reader.ReadString('\n')
-		if strings.TrimSpace(str) == "o" {
-			again = true
-			loginGen.GenerateLogin(8, 5)
-			StoreLogin(db, loginGen)
-			LoginsValides = append(LoginsValides, loginGen)
-			fmt.Println(LoginsValides)
-		} else {
-			again = false
-		}
-	}*/
+
 	http.HandleFunc("/getLogin", LoginHandleFunc)
 	http.ListenAndServe(":8080", nil)
 
 }
 
 func LoginHandleFunc(w http.ResponseWriter, r *http.Request) {
-	var loginGen Login
-	loginGen.GenerateLogin(8, 5)
-	//StoreLogin(db, loginGen)
-	fmt.Println(loginGen)
+	var loginGen1 Login
+	/*timer1 := time.NewTimer(5 * time.Second)
+	<-timer1.C*/
+	time.Sleep(5 * time.Second)
+	loginGen1.GenerateLogin(8, 2, 120)
+	StoreLogin(Db, loginGen1)
+	fmt.Println(loginGen1)
 	w.Header().Add("Content-Type", "application/json; charset=utf-8")
-	w.Write(loginGen.ToJSON())
-	fmt.Println("ok")
+	w.Write(loginGen1.ToJSON())
+
 }
