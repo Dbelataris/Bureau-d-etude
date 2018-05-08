@@ -8,7 +8,7 @@ import (
 
 	. "Bureau-d-etude/tools"
 
-	_ "Bureau-d-etude/go-sql-driver/mysql"
+	_ "Bureau-d-etude/go-sql-driver"
 )
 
 var Db *sql.DB
