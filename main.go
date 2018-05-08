@@ -12,6 +12,7 @@ import (
 )
 
 var Db *sql.DB
+var Ok bool
 
 func main() {
 	/*var LoginsValides = []Login{}
@@ -22,8 +23,8 @@ func main() {
 	} else {
 		println("Connexion à la BD échouée")
 	}
-	defer db.Close()
-
+	defer Db.Close()
+	Ok = true
 	http.HandleFunc("/getLogin", LoginHandleFunc)
 	http.ListenAndServe(":8080", nil)
 
@@ -31,13 +32,22 @@ func main() {
 
 func LoginHandleFunc(w http.ResponseWriter, r *http.Request) {
 	var loginGen1 Login
-	/*timer1 := time.NewTimer(5 * time.Second)
-	<-timer1.C*/
-	time.Sleep(5 * time.Second)
-	loginGen1.GenerateLogin(8, 2, 5)
-	StoreLogin(Db, loginGen1)
-	fmt.Println(loginGen1)
-	w.Header().Add("Content-Type", "application/json; charset=utf-8")
-	w.Write(loginGen1.ToJSON())
+
+	if Ok == true {
+		loginGen1.GenerateLogin(8, 2, 5)
+		StoreLogin(Db, loginGen1)
+		fmt.Println(loginGen1)
+		w.Header().Add("Content-Type", "application/json; charset=utf-8")
+		w.Write(loginGen1.ToJSON())
+		Ok = false
+		timer := time.NewTimer(3 * time.Second)
+		go func() {
+			<-timer.C
+			/*fmt.Println("Timer  expired")*/
+			Ok = true
+		}()
+	} /*else {
+		fmt.Println("Stop")
+	}*/
 
 }
