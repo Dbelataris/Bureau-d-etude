@@ -22,6 +22,7 @@ func StoreLogin(db *sql.DB, user Login) {
 	if err != nil {
 		log.Fatal(err)
 	}
+	defer stmtIns.Close()
 	res, err := stmt.Exec(user.Username, user.Password, user.StartTime, user.ExpirationTime, user.UseTime)
 	if err != nil {
 		log.Fatal(err)

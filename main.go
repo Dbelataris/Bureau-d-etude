@@ -16,12 +16,13 @@ var Db *sql.DB
 func main() {
 	/*var LoginsValides = []Login{}
 	  var loginGen Login*/
-	Db, _ = sql.Open("mysql", "radius:radpass@tcp(127.0.0.1:3306)/radius")
+	Db, _ = sql.Open("mysql", "root:isib@tcp(127.0.0.1:3306)/radius")
 	if CheckDbCon(Db) {
 		println("Connexion à la BD établit")
 	} else {
 		println("Connexion à la BD échouée")
 	}
+	defer db.Close()
 
 	http.HandleFunc("/getLogin", LoginHandleFunc)
 	http.ListenAndServe(":8080", nil)
