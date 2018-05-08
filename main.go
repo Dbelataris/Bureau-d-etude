@@ -8,7 +8,7 @@ import (
 
 	. "Bureau-d-etude/tools"
 
-	_ "Bureau-d-etude/github.com/go-sql-driver/mysql"
+	_ "Bureau-d-etude/go-sql-driver/mysql"
 )
 
 var Db *sql.DB
@@ -33,7 +33,7 @@ func LoginHandleFunc(w http.ResponseWriter, r *http.Request) {
 	/*timer1 := time.NewTimer(5 * time.Second)
 	<-timer1.C*/
 	time.Sleep(5 * time.Second)
-	loginGen1.GenerateLogin(8, 2, 120)
+	loginGen1.GenerateLogin(8, 2, 5)
 	StoreLogin(Db, loginGen1)
 	fmt.Println(loginGen1)
 	w.Header().Add("Content-Type", "application/json; charset=utf-8")
