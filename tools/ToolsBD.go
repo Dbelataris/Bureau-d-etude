@@ -2,6 +2,7 @@ package tools
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 )
 
@@ -36,5 +37,19 @@ func StoreLogin(db *sql.DB, user Login) {
 		log.Fatal(err)
 	}
 	log.Printf("ID = %d, affected = %d\n", lastId, rowCnt)
+
+}
+
+func DeleteLogin(db *sql.DB, user string) {
+	stmt, err := db.Prepare("DELETE FROM radcheck WHERE username = ?")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer stmt.Close()
+	res, err := stmt.Exec(user)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println(res)
 
 }
